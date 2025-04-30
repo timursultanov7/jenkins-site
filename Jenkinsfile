@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        NODE_PATH = "/Users/rusau/.nvm/versions/node/v16.14.2/bin"
+        NODE_PATH = "/Users/timursultanov/.nvm/versions/node/v16.14.2/bin"
         PATH = "${env.NODE_PATH}:${env.PATH}"
     }
 
@@ -12,7 +12,10 @@ pipeline {
 
         stage('Start Server') {
             steps {
-                dir('/Users/rusau/.jenkins/workspace/landing-page') {
+                dir('/Users/timursultanov7/.jenkins/workspaces/jenkins-site')
+                
+                
+                 {
                     script {
                         // Запустите новый сервер в фоновом режиме на порту 8082
                         sh 'npm start & echo $! > .pid'
@@ -31,7 +34,7 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                dir('/Users/rusau/.jenkins/workspace/landing-page') {
+                dir('/Users/timursultanov7/.jenkins//workspaces/jenkins-site') {
                     script {
                         // Запустите тесты
                         sh 'npm test'
