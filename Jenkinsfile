@@ -7,25 +7,14 @@ pipeline {
     }
 
     stages {
-
-      
-
         stage('Start Server') {
             steps {
-                dir('/Users/timursultanov/.jenkins/workspaces/jenkins-site')
-                
-                
-                 {
+                dir('jenkins-site') {
                     script {
-                        // Запустите новый сервер в фоновом режиме на порту 8082
+                        sh 'pwd'
+                        sh 'npm install'
                         sh 'npm start & echo $! > .pid'
-                        
-                        // Сохраните PID нового сервера, чтобы можно было остановить его после тестов
-                        script {
-                            env.NEW_SERVER_PID = sh(script: "cat .pid", returnStdout: true).trim()
-                        }
-
-                        // Дайте серверу время на запуск
+                        env.NEW_SERVER_PID = sh(script: "cat .pid", returnStdout: true).trim()
                         sleep 5
                     }
                 }
@@ -34,9 +23,8 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                dir('/Users/timursultanov/.jenkins//workspaces/jenkins-site') {
+                dir('jenkins-site') {
                     script {
-                        // Запустите тесты
                         sh 'npm test'
                     }
                 }
@@ -46,9 +34,11 @@ pipeline {
 
     post {
         always {
-            script {
-                // Остановите новый сервер
-                sh "kill ${env.NEW_SERVER_PID}"
+            dir('jenkins-site') {
+                script {
+                    sh 'echo "Stopping server with PID: ${NEW_SERVER_PID}"'
+                    sh 'kill ${NEW_SERVER_PID} || echo "Process not found"'
+                }
             }
         }
     }
