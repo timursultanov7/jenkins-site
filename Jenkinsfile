@@ -8,19 +8,7 @@ pipeline {
 
     stages {
 
-        stage('Prepare Workspace') {
-            steps {
-                dir('/Users/rusau/.jenkins/workspace/landing-page') {
-                    script {
-                        // Установите зависимости
-                        sh 'npm install'
-
-                        // Соберите проект
-                        sh 'npm run build'
-                    }
-                }
-            }
-        }
+      
 
         stage('Start Server') {
             steps {
